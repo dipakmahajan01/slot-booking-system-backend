@@ -14,33 +14,33 @@ import { Role } from '../../roles/entities/role.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column()
-  firstName: string;
+  firstName!: string;
 
   @Column()
-  lastName: string;
+  lastName!: string;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column()
-  password: string;
+  password!: string;
 
   @ManyToOne(() => Role, { eager: true })
   @JoinColumn({ name: 'roleId' })
-  role: Role;
+  role!: Role;
 
   @Column()
-  roleId: string;
+  roleId!: string;
 
   @OneToMany(() => Service, (service) => service.owner)
-  services: Service[];
+  services!: Service[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }
