@@ -20,38 +20,38 @@ export enum BookingStatus {
 @Entity('bookings')
 export class Booking {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })
-  customer: User;
+  customer!: User;
 
   @Column()
-  userId: string;
+  userId!: string;
 
   @ManyToOne(() => Service)
   @JoinColumn({ name: 'serviceId' })
-  service: Service;
+  service!: Service;
 
   @Column()
-  serviceId: string;
+  serviceId!: string;
 
   @Column({ type: 'timestamp' })
-  slotStartTime: Date;
+  slotStartTime!: Date;
 
   @Column({ type: 'timestamp' })
-  slotEndTime: Date;
+  slotEndTime!: Date;
 
   @Column({
     type: 'enum',
     enum: BookingStatus,
     default: BookingStatus.BOOKED,
   })
-  status: BookingStatus;
+  status!: BookingStatus;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }

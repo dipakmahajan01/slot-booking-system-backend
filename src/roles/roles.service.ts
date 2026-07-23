@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
+import { CreateRoleDto } from './dto/create-user.dto';
+import { updateRoleDto } from './dto/update-role.dto';
+
+
+
 
 @Injectable()
 export class RolesService {
@@ -16,7 +19,7 @@ export class RolesService {
     return `This action returns a #${id} role`;
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
+  update(id: number, updateRoleDto: updateRoleDto) {
     return `This action updates a #${id} role`;
   }
 
