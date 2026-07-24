@@ -31,6 +31,23 @@
 $ npm install
 ```
 
+## Environment Variables
+
+Create a `.env` file in the project root with the following variables:
+
+```env
+# Database (Postgres)
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=root
+DB_NAME=slot_booking
+
+# Auth
+JWT_SECRET=224e581e4b9d830ec396b46ac5f1f2303ede1b1d5a87dcdb66b47e50264c5d69
+JWT_EXPIRES_IN=1d
+```
+
 ## Compile and run the project
 
 ```bash
@@ -56,6 +73,180 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## API Reference
+
+Base URL: `http://localhost:3000`
+
+All protected routes require an `Authorization: Bearer <TOKEN>` header, where `<TOKEN>` is the `accessToken` returned by `/auth/login`.
+
+### Auth
+
+**Register**
+
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "roleName": "Owner"
+  }'
+```
+
+**Login**
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john@example.com",
+    "password": "password123"
+  }'
+```
+
+### Services
+
+**Create service** — Owner only
+
+```bash
+curl -X POST http://localhost:3000/services \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -d '{
+    "name": "Haircut",
+    "duration": 30,
+    "price": 25
+  }'
+```
+
+**Get my services** — Owner only
+
+```bash
+curl -X GET http://localhost:3000/services/my \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+**Browse all services** — Customer only
+
+```bash
+curl -X GET http://localhost:3000/services/browse \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+**Get service by ID**
+
+```bash
+curl -X GET http://localhost:3000/services/<SERVICE_ID>
+```
+
+**Update service** — Owner only
+
+```bash
+curl -X PATCH http://localhost:3000/services/<SERVICE_ID> \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -d '{
+    "price": 30
+  }'
+```
+
+**Delete service** — Owner only
+
+```bash
+curl -X DELETE http://localhost:3000/services/<SERVICE_ID> \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+### Availability
+
+**Create availability slot** — Owner only
+
+```bash
+curl -X POST http://localhost:3000/availability \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -d '{
+    "dayOfWeek": "MONDAY",
+    "startTime": "09:00",
+    "endTime": "17:00"
+  }'
+```
+
+**Get my availability slots** — Owner only
+
+```bash
+curl -X GET http://localhost:3000/availability \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+**Get availability slot by ID**
+
+```bash
+curl -X GET http://localhost:3000/availability/<AVAILABILITY_ID>
+```
+
+**Update availability slot** — Owner only
+
+```bash
+curl -X PATCH http://localhost:3000/availability/<AVAILABILITY_ID> \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -d '{
+    "endTime": "18:00"
+  }'
+```
+
+**Delete availability slot** — Owner only
+
+```bash
+curl -X DELETE http://localhost:3000/availability/<AVAILABILITY_ID> \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+### Bookings
+
+**Create booking** — Customer only
+
+```bash
+curl -X POST http://localhost:3000/bookings \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -d '{
+    "serviceId": "<SERVICE_ID>",
+    "slotStartTime": "2026-07-27T09:00:00.000Z",
+    "slotEndTime": "2026-07-27T09:30:00.000Z"
+  }'
+```
+
+**Get bookings** — any authenticated user (owners see bookings on their services, customers see their own)
+
+```bash
+curl -X GET http://localhost:3000/bookings \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+**Get booking by ID**
+
+```bash
+curl -X GET http://localhost:3000/bookings/<BOOKING_ID> \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+**Update booking status**
+
+```bash
+curl -X PATCH http://localhost:3000/bookings/<BOOKING_ID> \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -d '{
+    "status": "CANCELLED"
+  }'
+```
+
+> Note: The `users` and `roles` controllers exist in the codebase but are unimplemented CLI-generated stubs (not wired to the database), so they are omitted here.
 
 ## Deployment
 
